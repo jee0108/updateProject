@@ -1,0 +1,144 @@
+.meetingroom{
+	width: 650px;
+    height: 100%;
+	margin: auto;
+	}
+	
+	.meetingcontent{
+	text-align: start;
+	}
+	
+	.table{
+	size : 60%;
+	}
+	
+	.meetingTextarea{
+    resize: none;
+    width: 100%;
+    height: 300px;
+    border-radius: 10px;
+    resize: none;
+}
+
+
+.mymeeting_width, .mymeeting_input, .mymeeting_input2{
+ border-radius: 10px;
+ border: 1px solid #888;
+}
+
+.meeting-modal-width {width:600px !implement;}
+	
+	.meeting-width2{width: 18% !important;}
+	.meeting-width3{width: 40% !important;}
+
+	.meeting_input{border: none;}
+	.meeting_input2{	
+    border: 1px solid rgb(201, 196, 196);
+    border-radius: 10px;
+}
+	.meetingform{
+	border:none;
+	border-radius: 10px;
+	border-width:520px;
+	}
+	
+	.meetingStartDay, .meetingEndDay, .meeting_input2, .meetingStartTime, .meetingEndDay{
+	border-radius: 10px;
+	border: 1px solid gray;
+	}
+	.meetingroom > h2{
+	text-align: center;	
+	}
+	
+.btn-rigth{float:right;}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 23px;
+    vertical-align:middle;
+}
+
+.switch>input {display:none;}
+
+.title-align{
+	position: relative;
+	margin-bottom:0px;
+	margin-left:30px;
+	padding-left:18px;
+	padding-top: 15px;
+	padding-bottom:10px;
+	background-color: rgb(240, 239, 239);
+    border-radius: 20px 20px 0px 0px;
+    width:270px;
+    z-index:1;
+}
+
+.slider {
+	position: absolute;
+	cursor: pointer;
+    top: 5px;
+    left: 10px;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    top: 2px;
+    left: 3px;
+    right: 0;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+input:checked + .slider {
+    background-color: rgb(227, 98, 33);
+}
+
+.inputform{
+  border-radius: 10px;
+  width: 120px;
+  border: 1px solid rgb(206 212 218);
+}
+  
+input:focus + .slider {
+    box-shadow: 0 0 1px rgb(227, 98, 33);
+}
+  
+input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+  
+.slider.round {
+    border-radius: 34px;
+}
+  
+.slider.round:before {
+    border-radius: 50%;
+}
+  
+p {
+	margin:5px;
+	display:inline-block;
+	font-size:15px;
+	font-weight:bold;
+}
+.insertForm-rigth{float:right;}
+.insertMeetingForm{display: inline-block;}
+.jsp-include-position{position : relative;}
+.insertForm-position{
+	position : fixed;
+	top: 200px;
+	left:1200px;
+}

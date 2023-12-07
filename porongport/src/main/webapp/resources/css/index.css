@@ -1,0 +1,99 @@
+*{margin: 0; padding: 0; box-sizing: border-box;}
+
+.wrap{
+    width: 100%;
+    position: fixed;
+}
+
+header{
+    background: #010506;
+    width: 100%;
+    height: 60px;
+}
+#today{
+    color:#999;
+    float: right;
+    padding: 20px 20px 0 0;
+    font-size: 16px;
+    font-weight: 500;
+
+}
+
+#left{
+    float: left;
+    width: 50%;
+    background: #010506;
+    height: 100vh;
+    position: relative;
+}
+.logo{
+    width: 250px;
+    height: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.logo>img{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#right{
+    float: right;
+    width: 50%;
+    height: 100vh;
+    background: rgb(227, 95, 33);
+    position: relative;
+}
+
+#login_form{
+    width: 300px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#login_btn{
+    width: 100%;
+    background: #000;
+    border-radius: 3px;
+    color: #fff;
+    border-style: none;
+    height: 34px;
+}
+#right>a{
+    text-decoration: none;
+    color: #333;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+.form-control{
+    height: 40px;
+}
+
+span{
+    width: 100px;
+    height: 100px;
+    position: relative;
+    top: 30px;
+    left: -42%;
+    
+}
+#login_form input{
+    padding-left: 45px;
+}
+.icon>i{
+    color: #999;
+}
+.login_pwd{
+    margin-bottom: 30px;
+}
+.right>a:hover{
+	color: #fff;
+	text-decoration: underline;
+}

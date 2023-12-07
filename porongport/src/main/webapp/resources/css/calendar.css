@@ -1,0 +1,328 @@
+/* section calendar */
+
+.sec_cal {
+    width: 1000px;
+    margin: 0 auto;
+    font-family: "NotoSansR";
+}
+
+.sec_cal .cal_nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 78px;
+}
+
+.sec_cal .cal_nav .year-month {
+    width: 300px;
+    text-align: center;
+    line-height: 1;
+}
+
+.sec_cal .cal_nav .nav {
+    display: flex;
+    border: 1px solid #333333;
+    border-radius: 5px;
+}
+
+.sec_cal .cal_nav .go-prev,
+.sec_cal .cal_nav .go-next {
+    display: block;
+    width: 50px;
+    height: 78px;
+    font-size: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sec_cal .cal_nav .go-prev::before,
+.sec_cal .cal_nav .go-next::before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #000;
+    border-width: 3px 3px 0 0;
+    transition: border 0.1s;
+}
+
+.sec_cal .cal_nav .go-prev:hover::before,
+.sec_cal .cal_nav .go-next:hover::before {
+    border-color: #ed2a61;
+}
+
+.sec_cal .cal_nav .go-prev::before {
+    transform: rotate(-135deg);
+}
+
+.sec_cal .cal_nav .go-next::before {
+    transform: rotate(45deg);
+}
+
+.sec_cal .cal_wrap {
+    padding-top: 40px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.sec_cal .cal_wrap .days {
+    display: flex;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.sec_cal .cal_wrap::after {
+    top: 368px;
+}
+
+.sec_cal .cal_wrap .day {
+    display:flex;
+    width: calc(100% / 7);
+    text-align: left;
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    border-radius:5px
+}
+.nocurrent{
+   align-items: center;
+   justify-content: center;
+}
+
+.current.today {background: rgb(242 242 242);}
+
+.sec_cal .cal_wrap .dates {
+    display: flex;
+    flex-flow: wrap;
+    height: 650px;
+}
+
+.sec_cal .cal_wrap .day:nth-child(7n) {
+    color: #3c6ffa;
+}
+
+.sec_cal .cal_wrap .day:nth-child(7n-6) {
+    color: #ed2a61;
+}
+
+.sec_cal .cal_wrap .day.disable {
+    color: #ddd;
+}
+
+.fc-day-sun a {
+  color: red;
+  text-decoration: none;
+}
+.fc-day-sat a {
+  color: blue;
+  text-decoration: none;
+}
+
+.fc-day-mon a {
+  color: black;
+  text-decoration: none;
+}
+.fc-day-tue a  {
+  color: black;
+  text-decoration: none;
+}
+.fc-day-wed a {
+  color: black;
+  text-decoration: none;
+}
+.fc-day-thu a {
+  color: black;
+  text-decoration: none;
+}
+.fc-day-fri a {
+  color: black;
+  text-decoration: none;
+}
+
+ 
+.selectMySchdule{
+   background: rgb(155 89 182);
+   font-size: 12px;
+   width:100%;
+   height:20px;
+   align: bottom;
+}
+.selectMyDepartment{
+   z-index: 1;
+   background: rgb(52 152 219);
+   font-size: 12px;
+   width:100%;
+   height:20px;
+   align: bottom;	
+}
+.selectMeetingRoom{
+   background: rgb(241 196 15);
+   font-size: 12px;
+   width:100%;
+   height:20px;
+   align: bottom;
+}
+/*풀캘린더*/
+.calendarWidthMain{width:1100px;}
+.calendarCenter{margin:auto; padding-top:30px;}
+a{
+    text-decoration: none;
+    color: balck;
+}
+a:hover{
+	text-decoration: none;
+    color: balck;
+}
+
+ .popper,
+	  .tooltip {
+	    position: absolute;
+	    z-index: 9999;
+	    background: #FFC107;
+	    color: black;
+	    width: 150px;
+	    border-radius: 3px;
+	    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+	    padding: 10px;
+	    text-align: center;
+	  }
+	  .style5 .tooltip {
+	    background: #1E252B;
+	    color: #FFFFFF;
+	    max-width: 200px;
+	    width: auto;
+	    font-size: .8rem;
+	    padding: .5em 1em;
+	  }
+	  .popper .popper__arrow,
+	  .tooltip .tooltip-arrow {
+	    width: 0;
+	    height: 0;
+	    border-style: solid;
+	    position: absolute;
+	    margin: 5px;
+	  }
+	
+	  .tooltip .tooltip-arrow,
+	  .popper .popper__arrow {
+	    border-color: #FFC107;
+	  }
+	  .style5 .tooltip .tooltip-arrow {
+	    border-color: #1E252B;
+	  }
+	  .popper[x-placement^="top"],
+	  .tooltip[x-placement^="top"] {
+	    margin-bottom: 5px;
+	  }
+	  .popper[x-placement^="top"] .popper__arrow,
+	  .tooltip[x-placement^="top"] .tooltip-arrow {
+	    border-width: 5px 5px 0 5px;
+	    border-left-color: transparent;
+	    border-right-color: transparent;
+	    border-bottom-color: transparent;
+	    bottom: -5px;
+	    left: calc(50% - 5px);
+	    margin-top: 0;
+	    margin-bottom: 0;
+	  }
+	  .popper[x-placement^="bottom"],
+	  .tooltip[x-placement^="bottom"] {
+	    margin-top: 5px;
+	  }
+	  .tooltip[x-placement^="bottom"] .tooltip-arrow,
+	  .popper[x-placement^="bottom"] .popper__arrow {
+	    border-width: 0 5px 5px 5px;
+	    border-left-color: transparent;
+	    border-right-color: transparent;
+	    border-top-color: transparent;
+	    top: -5px;
+	    left: calc(50% - 5px);
+	    margin-top: 0;
+	    margin-bottom: 0;
+	  }
+	  .tooltip[x-placement^="right"],
+	  .popper[x-placement^="right"] {
+	    margin-left: 5px;
+	  }
+	  .popper[x-placement^="right"] .popper__arrow,
+	  .tooltip[x-placement^="right"] .tooltip-arrow {
+	    border-width: 5px 5px 5px 0;
+	    border-left-color: transparent;
+	    border-top-color: transparent;
+	    border-bottom-color: transparent;
+	    left: -5px;
+	    top: calc(50% - 5px);
+	    margin-left: 0;
+	    margin-right: 0;
+	  }
+	  .popper[x-placement^="left"],
+	  .tooltip[x-placement^="left"] {
+	    margin-right: 5px;
+	  }
+	  .popper[x-placement^="left"] .popper__arrow,
+	  .tooltip[x-placement^="left"] .tooltip-arrow {
+	    border-width: 5px 0 5px 5px;
+	    border-top-color: transparent;
+	    border-right-color: transparent;
+	    border-bottom-color: transparent;
+	    right: -5px;
+	    top: calc(50% - 5px);
+	    margin-left: 0;
+	    margin-right: 0;
+	  }
+
+/*모달*/
+#modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: none;
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+.calendar-modal-width {width:600px !implement;}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.textarea-resize{resize: none;}
+.calendar-a-color{color: #333333;}
+.calendar-a-color:hover{
+  text-decoration: none;
+  color: #333333;
+}
+
+.inputform{
+  border-radius: 10px;
+  width: 120px;
+  border: 1px solid rgb(206 212 218);
+}
+.modal-border{
+  border-radius: 5px;
+  padding: 2px;
+  height: 30px;
+  border: 1px solid rgb(206 212 218);
+  float:right;
+}

@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="messageMapper">
+	
+	<!-- ********************************************************* -->
+	<!-- 공통 SQL문 -->
+	<sql id="messageSql">
+		SELECT
+				ROW_NUMBER() OVER(ORDER BY M.MESSAGE_NO ASC) AS NUM,
+				M.MESSAGE_NO,
+				E.EMP_NAME,
+				J.JOB_NAME,
+				D.DEPT_NAME,
+				M.MESSAGE_CONTENT,
+				TO_CHAR(M.CREATE_DATE,
+				'YYYY-MM-DD AM HH24:MI:SS') AS "CREATE_DATE",
+				M.READ_YN, 
+				M.BOOKMARK_YN
+		  FROM
+		  		MESSAGE M, EMPLOYEE E, DEPARTMENT D, JOB J
+   		 WHERE
+		   		E.DEPT_CODE = D.DEPT_CODE
+		   AND
+		   		E.JOB_CODE = J.JOB_CODE
+	</sql>
+	
+	<sql id="messageSearchCountSql">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		MESSAGE M, EMPLOYEE E, DEPARTMENT D, JOB J
+		 WHERE
+		   		E.DEPT_CODE = D.DEPT_CODE
+		   AND
+		   		E.JOB_CODE = J.JOB_CODE
+	</sql>
+	
+
+	<resultMap id="messageResultSet" type="message">
+		<result column="MESSAGE_NO" property="messageNo" />
+		<result column="MESSAGE_CONTENT" property="messageContent" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="DELETE_DATE" property="deleteDate" />
+		<result column="MESSAGE_STATUS" property="messageStatus" />
+		<result column="SEND_USER" property="sendUser" />
+		<result column="RECEIVE_USER" property="reciveUser" />
+		<result column="NUM" property="messageRank" />
+		<result column="EFFECTIVE_DATE" property="effectiveDate" />
+		<result column="READ_YN" property="readYN" />
+		<result column="BOOKMARK_YN" property="bookmarkYN" />
+		<result column="JOB_NAME" property="jobName" />
+		<result column="EMP_NAME" property="empName" />
+		<result column="DEPT_NAME" property="deptName" />
+		<result column="ORIGIN_FILENAME" property="originFileName" />
+		<result column="CHANGE_FILENAME" property="changeFileName" />
+		<result column="MESSAGE_TYPE" property="messageType" />
+	</resultMap>
+	
+	<resultMap id="empResultSet" type="emp">
+		<result column="EMP_NO" property="empNo" />
+		<result column="EMP_NAME" property="empName" />
+		<result column="EMP_PWD" property="empPwd" />
+		<result column="EMP_PHONE" property="empPhone" />
+		<result column="EMP_ADDRESS" property="empAddress" />
+		<result column="EMP_ADDRESSCODE" property="empAddressCode" />
+		<result column="EMP_STATUS" property="empStatus" />
+		<result column="EMP_ADMIN" property="empAdmin" /> <!-- 관리자급 여부 -->
+		<result column="EMP_EMAIL" property="empEmail" />
+		<result column="DEPT_CODE" property="deptCode" />
+		<result column="DEPT_NAME" property="deptName" />
+		<result column="JOB_CODE" property="jobCode" />
+		<result column="JOB_NAME" property="jobName" />
+		<result column="CREATE_DATE" property="createDate" />
+		<result column="MODIFY_DATE" property="modifyDate" />
+		<result column="FILE_NO" property="fileNo" />
+		<result column="EMP_ANNUAL" property="empAnnual" />
+		<result column="EMP_COUNT" property="empCount" />
+		<result column="FIRST_LOGIN" property="firstLogin" />
+ 	</resultMap>
+
+	
+	<!-- ********************************************************* -->
+	<!-- 1) 받은 메시지 전체 리스트 조회  -->
+	<select id="receivedMessageList" resultMap="messageResultSet">
+	
+		<include refid="messageSql" />
+		   AND
+		   		M.SEND_USER = E.EMP_NO
+		   AND
+		   		M.MESSAGE_STATUS = 'Y'
+		   AND
+		   		M.RECEIVE_USER = #{ empNo }
+		 ORDER
+		    BY
+		        NUM DESC
+	</select>
+	
+	<!-- 2) 받은 메시지 전체 개수 조회 -->
+	<select id="receivedListCount" resultType="_int">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		MESSAGE
+  		 WHERE
+  		 		MESSAGE_STATUS = 'Y'
+  		   AND
+	   			RECEIVE_USER = #{ empNo }
+	</select>
+	
+	<!-- 3) 받은 메시지 검색 조회 -->
+	<select id="searchReceivedMessage" resultMap="messageResultSet" parameterType="hashmap">
+	
+		<include refid="messageSql" />
+		   AND
+		   		M.SEND_USER = E.EMP_NO
+		   AND
+		   		MESSAGE_STATUS = 'Y'
+		   AND
+	   			M.RECEIVE_USER = #{ empNo }
+	  	 <choose>
+	  	 	<when test="condition == 'userName'">
+	  	   		AND
+	  	 			E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+	  	   		AND
+	  	   			J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+	  	   		AND
+	  	 			M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	 LIKE '%' || #{ keyword } || '%'
+		 ORDER
+		    BY
+		        NUM DESC
+	</select>
+	
+	<!-- 4) 받은 메시지 검색 개수 조회 -->
+	<select id="searchReceivedCount" resultType="_int" parameterType="hashmap">
+	
+		<include refid="messageSearchCountSql" />
+		   AND
+		   		M.SEND_USER = E.EMP_NO
+		   AND
+		   		MESSAGE_STATUS = 'Y'
+		   AND
+	   			M.RECEIVE_USER = #{ empNo }
+	  	 <choose>
+	  	 	<when test="condition == 'userName'">
+		  	   AND
+		  	 		E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+		  	   AND
+		  	   		J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+		  	   AND
+		  	 		M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	  LIKE '%' || #{ keyword } || '%'
+	</select>
+	
+
+	<!-- ********************************************************* -->
+	<!-- 1) 받은메시지 보관함 전체 리스트 조회 -->
+	<select id="receivedStorageList" resultMap="messageResultSet" parameterType="message">
+	
+		<include refid="messageSql" />
+		   AND
+		   		M.SEND_USER = E.EMP_NO
+		   AND
+		        M.MESSAGE_STATUS = 'S'
+		   AND
+		        M.RECEIVE_USER = #{ empNo }
+		 ORDER
+		 	BY
+		 		NUM DESC
+	</select>
+	
+	<!-- 2) 받은메시지 보관함 전체 개수 조회 -->
+	<select id="receivedStorageCount" resultType="_int" parameterType="message">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		MESSAGE
+		 WHERE
+		 		MESSAGE_STATUS = 'S'
+		   AND
+		   		RECEIVE_USER = #{ empNo }
+	</select>
+	
+	<!-- 3) 받은메시지 보관함 검색 리스트 조회 -->
+	<select id="searchReceivedStorageMsg" resultMap="messageResultSet" parameterType="hashmap">
+		
+		<include refid="messageSql" />
+		   AND
+		   		M.SEND_USER = E.EMP_NO
+		   AND
+		   		MESSAGE_STATUS = 'S'
+		   AND
+	   			M.RECEIVE_USER = #{ empNo }
+	  	 <choose>
+	  	 	<when test="condition == 'userName'">
+	  	   		AND
+	  	 			E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+	  	   		AND
+	  	   			J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+	  	   		AND
+	  	 			M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	 LIKE '%' || #{ keyword } || '%'
+		 ORDER
+		    BY
+		        NUM DESC
+	</select>
+	
+	<!-- 4) 받은메시지 보관함 검색 개수 조회 -->
+	<select id="searchReceivedStorageCount" resultType="_int" parameterType="hashmap">
+		
+		<include refid="messageSearchCountSql" />
+		   AND
+		   		M.SEND_USER = E.EMP_NO
+		   AND
+		   		MESSAGE_STATUS = 'S'
+		   AND
+	   			M.RECEIVE_USER = #{ empNo }
+	  	 <choose>
+	  	 	<when test="condition == 'userName'">
+		  	   AND
+		  	 		E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+		  	   AND
+		  	   		J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+		  	   AND
+		  	 		M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	  LIKE '%' || #{ keyword } || '%'
+	</select>
+	
+
+	
+	<!-- ********************************************************* -->	
+	<!-- 1) 보낸 메시지 전체 리스트 조회 -->
+	<select id="sendMessageList" resultMap="messageResultSet">
+		
+		<include refid="messageSql" />
+		   AND
+		   		M.RECEIVE_USER = E.EMP_NO
+		   AND
+		   		M.MESSAGE_STATUS = 'Y'
+		   AND
+		   		M.SEND_USER = #{ empNo }
+		 ORDER
+		 	BY
+		 		NUM DESC
+	</select>
+	
+	<!-- 2) 보낸 메시지 검색 리스트 조회 -->
+	<select id="searchSendMessage" resultMap="messageResultSet">
+		
+		<include refid="messageSql" />
+		   AND
+		   		M.RECEIVE_USER = E.EMP_NO
+		   AND
+		   		M.MESSAGE_STATUS = 'Y'
+		   AND
+		   		M.SEND_USER = #{ empNo }
+  	 	 <choose>
+	  	 	<when test="condition == 'userName'">
+		  	   AND
+		  	 		E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+		  	   AND
+		  	   		J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+		  	   AND
+		  	 		M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	  LIKE '%' || #{ keyword } || '%'
+  		 ORDER
+		    BY
+		        NUM DESC
+	</select>
+	
+	<!-- 3) 보낸 메시지 전체 개수 조회 -->
+	<select id="sendListCount" resultType="_int">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		MESSAGE
+		 WHERE
+				MESSAGE_STATUS = 'Y'
+		   AND
+		  		SEND_USER = #{ empNo }
+	</select>
+	
+	<!-- 4) 보낸 메시지 검색 개수 조회 -->
+	<select id="searchSendCount" resultType="_int">
+	
+		<include refid="messageSearchCountSql" />
+		   AND
+		 		M.RECEIVE_USER = E.EMP_NO
+		   AND
+		   		M.MESSAGE_STATUS = 'Y'
+		   AND
+		   		M.SEND_USER = #{ empNo }
+  	 	 <choose>
+	  	 	<when test="condition == 'userName'">
+		  	   AND
+		  	 		E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+		  	   AND
+		  	   		J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+		  	   AND
+		  	 		M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	  LIKE '%' || #{ keyword } || '%'
+	</select>
+	
+	<!-- ********************************************************* -->
+	<!-- 1) 보낸 메시지 보관함 전체 리스트 조회 -->
+	<select id="sendStorageList" resultMap="messageResultSet" parameterType="message">
+		
+		<include refid="messageSql" />
+		   AND
+		   		M.RECEIVE_USER = E.EMP_NO
+		   AND
+		        M.MESSAGE_STATUS = 'S'
+		   AND
+		        M.SEND_USER = #{ empNo }
+		 ORDER
+		 	BY
+		 		NUM DESC
+	</select>
+	
+	<!-- 2) 보낸 메시지 보관함 검색 개수 조회 -->
+	<select id="sendStorageListCount" resultType="_int">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		MESSAGE
+  		 WHERE
+  		 		MESSAGE_STATUS = 'S'
+  		   AND
+	   			SEND_USER = #{ empNo }
+	</select>
+	
+	<!-- 3) 보낸 메시지 보관함 검색 리스트 조회 -->
+	<select id="searchSendStorageMsg" resultMap="messageResultSet" parameterType="message">
+		
+		<include refid="messageSql" />
+		   AND
+		   		M.RECEIVE_USER = E.EMP_NO
+		   AND
+		   		MESSAGE_STATUS = 'S'
+		   AND
+	   			M.SEND_USER = #{ empNo }
+	  	 <choose>
+	  	 	<when test="condition == 'userName'">
+	  	   		AND
+	  	 			E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+	  	   		AND
+	  	   			J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+	  	   		AND
+	  	 			M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	 LIKE '%' || #{ keyword } || '%'
+		 ORDER
+		    BY
+		        NUM DESC
+	</select>
+	
+	<!-- 4) 보낸 메시지 보관함 검색 개수 조회 -->
+	<select id="searchSendStorageCount" resultType="_int">
+	
+		<include refid="messageSearchCountSql" />
+		   AND
+		   		M.RECEIVE_USER = E.EMP_NO
+		   AND
+		   		MESSAGE_STATUS = 'S'
+		   AND
+	   			M.SEND_USER = #{ empNo }
+	  	 <choose>
+	  	 	<when test="condition == 'userName'">
+		  	   AND
+		  	 		E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+		  	   AND
+		  	   		J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+		  	   AND
+		  	 		M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	  LIKE '%' || #{ keyword } || '%'
+	</select>
+	
+	
+	<!-- ********************************************************* -->
+	<!-- 1) 휴지통 메시지 전체 리스트 조회 -->
+	<select id="deleteMessageBoxList" resultMap="messageResultSet" parameterType="message">
+		SELECT
+				ROW_NUMBER() OVER(ORDER BY M.DELETE_DATE ASC) AS NUM,
+				DECODE(M.SEND_USER, #{ empNo} , '발신', M.RECEIVE_USER, #{ empNo }, '수신') AS MESSAGE_TYPE,
+		        M.MESSAGE_NO,
+		        E.EMP_NAME,
+		        J.JOB_NAME,
+		        D.DEPT_NAME,
+		        M.MESSAGE_CONTENT,
+		        TO_CHAR(M.DELETE_DATE, 'YYYY-MM-DD AM HH24:MI:SS') AS "DELETE_DATE",
+		        ((TRUNC(DELETE_DATE) + 31) - TRUNC(SYSDATE)) EFFECTIVE_DATE,
+		        M.READ_YN, 
+				M.BOOKMARK_YN
+  		  FROM
+  				MESSAGE M, EMPLOYEE E, DEPARTMENT D, JOB J
+		 WHERE 
+		 		M.SEND_USER = E.EMP_NO
+		   AND
+		   		E.DEPT_CODE = D.DEPT_CODE
+		   AND
+		   		E.JOB_CODE = J.JOB_CODE
+		   AND
+		   		MESSAGE_STATUS = 'N'
+		   AND
+	   			(M.RECEIVE_USER = #{ empNo } OR M.SEND_USER = #{ empNo })
+		 ORDER
+		 	BY NUM DESC
+	</select>
+	
+	<!-- 2) 휴지통 메시지 전체 리스트 개수 조회  -->
+	<select id="deleteListCount" resultType="_int">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		MESSAGE
+  		 WHERE
+  		 		MESSAGE_STATUS = 'N'
+  		   AND
+		   		(RECEIVE_USER = #{ empNo } OR SEND_USER = #{ empNo })
+	</select>
+	
+	<!-- 3) 휴지통 메시지 검색 리스트 조회 -->
+	<select id="searchDeleteMessage" resultMap="messageResultSet" parameterType="hashmap">
+		SELECT
+				ROW_NUMBER() OVER(ORDER BY M.DELETE_DATE ASC) AS NUM,
+		        M.MESSAGE_NO,
+		        E.EMP_NAME,
+		        J.JOB_NAME,
+		        D.DEPT_NAME,
+		        M.MESSAGE_CONTENT,
+		        TO_CHAR(M.DELETE_DATE, 'YYYY-MM-DD AM HH24:MI:SS') AS "DELETE_DATE",
+		        ((TRUNC(DELETE_DATE) + 31) - TRUNC(SYSDATE)) EFFECTIVE_DATE,
+		        M.READ_YN, 
+				M.BOOKMARK_YN
+  		  FROM
+  				MESSAGE M, EMPLOYEE E, DEPARTMENT D, JOB J
+		 WHERE 
+		 		M.SEND_USER = E.EMP_NO
+		   AND
+		   		E.DEPT_CODE = D.DEPT_CODE
+		   AND
+		   		E.JOB_CODE = J.JOB_CODE
+		   AND
+		   		MESSAGE_STATUS = 'N'
+		   AND
+ 				M.RECEIVE_USER = #{ empNo }
+		  <choose>
+	  	 	<when test="condition == 'userName'">
+		  	   AND
+		  	 		E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+		  	   AND
+		  	   		J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+		  	   AND
+		  	 		M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	  LIKE '%' || #{ keyword } || '%'
+		 ORDER
+		 	BY NUM DESC
+	</select>
+	
+	<!-- 4) 휴지통 메시지 검색 개수 조회 -->		 	
+	<select id="searchDeleteListCount" resultType="_int" parameterType="hashmap">
+	
+		<include refid="messageSearchCountSql" />
+		   AND
+		   		MESSAGE_STATUS = 'N'
+		   AND
+ 				M.RECEIVE_USER = #{ empNo }
+		  <choose>
+	  	 	<when test="condition == 'userName'">
+		  	   AND
+		  	 		E.EMP_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'jobName'">
+		  	   AND
+		  	   		J.JOB_NAME
+	  	 	</when>
+	  	 	<when test="condition == 'deptName'">
+				AND
+					D.DEPT_NAME
+	  	 	</when>
+	  	 	<otherwise>
+		  	   AND
+		  	 		M.MESSAGE_CONTENT
+	  	 	</otherwise>
+	  	 </choose>
+	  	  LIKE '%' || #{ keyword } || '%'
+	</select>
+	
+	<!-- 5) 메시지 영구삭제 -->
+	<delete id="deletePermanentlyMessage" parameterType="_int">
+		DELETE
+		  FROM
+		  		MESSAGE
+		 WHERE
+		 		MESSAGE_STATUS = 'N'
+		   AND
+		   		MESSAGE_NO = #{ messageNo }
+	</delete>
+	
+	
+	<!-- ********************************************************* -->
+	<!-- 1) 메시지 북마크 설정  -->
+	<update id="bookmarkMsg" parameterType="hashmap">
+		UPDATE
+				MESSAGE
+		   SET
+		   		BOOKMARK_YN = #{ bookmarkYN }
+		 WHERE
+		 		MESSAGE_NO = #{ messageNo }
+	</update>
+	
+	<!-- 2) 메시지 삭제 - 휴지통 이동 -->
+	<update id="deleteMessage" parameterType="_int">
+		UPDATE
+		        MESSAGE
+		   SET
+		        MESSAGE_STATUS = 'N',
+		        DELETE_DATE = SYSDATE
+		 WHERE
+		        MESSAGE_NO = #{ messageNo }
+	</update>
+	
+	<!-- 3) 메시지 보관함으로 이동 -->
+	<update id="storageMessage" parameterType="_int">
+		UPDATE
+				MESSAGE
+		   SET
+		   		MESSAGE_STATUS = 'S'
+		 WHERE
+		 		MESSAGE_NO = #{ messageNo }
+	</update>
+		
+	<!-- 4) 메시지 보관함 & 휴지통에서 기존 메시지함으로 이동 -->
+	<update id="moveMessageBox" parameterType="_int">
+		UPDATE
+				MESSAGE
+		   SET
+		   		MESSAGE_STATUS = 'Y'
+		 WHERE
+		 		MESSAGE_NO = #{ messageNo }
+	</update>
+	
+	<!-- 5) 받은 메시지 상세보기 -->
+	<select id="detailMessage" resultMap="messageResultSet" parameterType="hashmap">
+		SELECT
+				M.CREATE_DATE,
+				E.EMP_NAME,
+				D.DEPT_NAME,
+				J.JOB_NAME,
+				M.MESSAGE_CONTENT,
+				M.READ_YN,
+				M.ORIGIN_FILENAME,
+				M.CHANGE_FILENAME
+		  FROM
+		  		MESSAGE M, DEPARTMENT D, JOB J, EMPLOYEE E
+		 WHERE
+		 		M.SEND_USER = E.EMP_NO
+		   AND
+		   		E.DEPT_CODE = D.DEPT_CODE
+		   AND
+		   		E.JOB_CODE = J.JOB_CODE
+		   AND
+		   		M.MESSAGE_STATUS = 'Y'
+		   AND
+		   		M.MESSAGE_NO = #{ messageNo }
+		   AND
+		   		(M.RECEIVE_USER = #{ empNo } OR M.SEND_USER = #{ empNo })
+	</select>
+	
+	<!-- 6) 메시지 작성 -->
+	<insert id="insertMessage" parameterType="message">
+		INSERT
+		  INTO
+		  		MESSAGE
+		  		(
+		  		MESSAGE_NO,
+		  		MESSAGE_CONTENT,
+		  		CREATE_DATE,
+		  		DELETE_DATE,
+		  		MESSAGE_STATUS,
+		  		SEND_USER,
+		  		RECEIVE_USER,
+		  		ORIGIN_FILENAME,
+		  		CHANGE_FILENAME,
+		  		READ_YN,
+		  		BOOKMARK_YN
+		  		)
+		VALUES
+				(SEQ_MESSAGE.NEXTVAL,
+				#{ messageContent },
+				SYSDATE,
+				DEFAULT,
+				DEFAULT,
+				#{ sendUser },
+				#{ receiveUser },
+				#{ originFileName },
+				#{ changeFileName },
+				DEFAULT,
+				DEFAULT)
+	</insert>
+	
+	<!-- 7) 메시지 읽음 설정 -->
+	<update id="readMsg" parameterType="hashmap">
+		UPDATE
+				MESSAGE
+		   SET
+		   		READ_YN = #{ readYN }
+		 WHERE
+		 		MESSAGE_NO = #{ messageNo }
+	</update>
+	
+	<!--8) 전체 회원 목록 조회 -->
+	<select id="selectAllEmployee" resultMap="empResultSet" parameterType="emp">
+		SELECT
+				EMP_NO,
+				EMP_NAME,
+				EMP_PHONE,
+				EMP_STATUS,
+				EMP_ADMIN,
+				EMP_EMAIL,
+				DEPT_NAME,
+				JOB_NAME,
+				CREATE_DATE
+		  FROM
+		  		EMPLOYEE E,
+		  		DEPARTMENT D,
+		  		JOB J
+		 WHERE
+		 		E.DEPT_CODE = D.DEPT_CODE
+		   AND
+		   		E.JOB_CODE = J.JOB_CODE
+		   AND
+		   		EMP_STATUS = 'Y'
+	</select>
+	
+	
+	
+</mapper>

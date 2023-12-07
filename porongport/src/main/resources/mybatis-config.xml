@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+
+	<typeAliases>
+		<typeAlias type="com.kh.porong.employee.model.vo.Employee" alias="emp"/>
+		<typeAlias type="com.kh.porong.employee.model.vo.Attendance" alias="att" />
+		<typeAlias type="com.kh.porong.employee.model.vo.Attachment" alias="profile" />
+		<typeAlias type="com.kh.porong.calendar.model.vo.ScheduleVO" alias="schedule"/>
+		<typeAlias type="com.kh.porong.calendar.model.vo.MeetingRoomVO" alias="meetingRoom"/>
+		<typeAlias type="com.kh.porong.message.model.vo.Message" alias="message" />
+		<typeAlias type="com.kh.porong.approval.model.vo.VacationVO" alias="approval" />
+		<typeAlias type="com.kh.porong.notice.model.vo.Notice" alias="notice" />
+		<typeAlias type="com.kh.porong.notice.model.vo.NoticeAttachment" alias="noticeAttachment" />
+		<typeAlias type="com.kh.porong.approval.model.vo.GeneralVO" alias="general" />
+		<typeAlias type="com.kh.porong.approval.model.vo.EdmsVO" alias="edms" />
+		<typeAlias type="com.kh.porong.approval.model.vo.EdmsLineVO" alias="edmsLine" />
+		<typeAlias type="com.kh.porong.notice.model.vo.NoticeLike" alias="noticeLike" />
+		<typeAlias type="com.kh.porong.reply.model.vo.Reply" alias="reply" />
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="/mappers/employee/emp-mapper.xml"/> 
+		<mapper resource="/mappers/calendar/schedule-mapper.xml"/> 
+		<mapper resource="/mappers/calendar/meetingRoom-mapper.xml"/> 
+		<mapper resource="/mappers/message/message-mapper.xml" />
+		<mapper resource="/mappers/approval/approval-mapper.xml" />
+		<mapper resource="/mappers/notice/notice-mapper.xml" />
+	</mappers>
+
+</configuration>

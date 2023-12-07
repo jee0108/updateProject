@@ -1,0 +1,177 @@
+@charset "UTF-8";
+
+input[readonly] {
+	background-color: white!important;
+	border:none;
+}
+
+.detailContent .table th {
+	vertical-align: middle;
+}
+
+
+.tr-sender td {
+	display: flex;
+}
+
+.tr-sender input {
+	margin: 8px 0 0 8px;
+}
+
+.select2-container, .text-sm {
+	font-size: 14px;
+}
+
+/* =================================================== */
+/* 헤더 관련 */
+.pp-content .h-title {
+	margin-bottom: 16px;
+    font-size: 20pt;
+    font-weight: bold;
+}
+
+.pp-content .toolbar {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 16px;
+}
+
+.pp-content .selectCount {
+	float: right;
+	color: #4A4A4A;
+    margin-bottom: 12px;
+   	font-size: 14px;
+}
+
+.pp-content .pp-content-message .selectCount .message-count {
+	color: #6C79E0;
+}
+
+/* 테이블 관련 */
+.pp-content .pp-content-message .tb-message{
+	text-align: center;
+	font-weight: 550;
+	font-size: 14px;
+}
+
+.pp-content .pp-content-message .td-content, .fa-star{
+	cursor: pointer;
+}
+
+.pp-content .pp-content-message .tableBody .tb-title-tr{
+    background-color: #6C79E0;
+    color: white;
+}
+
+#pagingArea{
+	margin-top: 100px;
+}
+
+#storeBtn{
+	background-color: #6C79E0;
+}
+
+.td-fa-envelope.fa-envelope {
+	color: #E35F21;
+}
+.td-fa-envelope.fa-envelope-open {
+	color: #d4d4d4;
+}
+
+.td-fa-star{
+	color: #F1C40F
+}
+
+#effectiveDate, .send{
+	color: #DC3545;
+}
+
+#messageTextarea{
+	overflow: auto;
+	resize: none;
+	background-color: white;
+	height: 400px;
+}
+
+.recv {
+    color: dodgerblue;
+}
+
+/* 메시지 작성 관련 */
+.writeCount{
+	float:right;
+	padding-right:25px;
+	font-size:12px;
+	margin-top:15px;
+}
+
+.modal-header{
+	height: 50px;
+    background-color: #6C79E0;
+    color: white;
+}
+
+.modal-header .modal-title{
+    color: white;
+}
+
+.filebox .upload-name {
+    display: inline-block;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #ced4da;
+    width: 87%;
+}
+
+.filebox label {
+	display: inline-block;
+    padding: 6px 10px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 4px;
+    margin: 0px;
+    height: 32px;
+    width: 72px;
+}
+
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+
+/* 상세보기 관련 */
+#profile-message{
+	border-radius: 50%;
+	width: 50px;
+}
+
+.detailContent th{
+	text-align: center;
+	background-color: white;
+}
+
+.detailContent .detail-input{
+	background-color: white;
+}
+
+
+.msg-write {
+	width:100%;
+	height:100%;
+	padding-top: 4px;
+    color: white;
+    background-color: #E35F21;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.msg-write:hover {
+	cursor: pointer;
+}
